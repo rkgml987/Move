@@ -11,7 +11,7 @@ public class Move : MonoBehaviour
         transform.position = new Vector3(0, -1, 0);
         childTransform.position = new Vector3(0, 2, 0);
 
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 30));
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
         childTransform.localRotation = Quaternion.Euler(new Vector3(0, 60, 0));
     }
 
@@ -40,8 +40,14 @@ public class Move : MonoBehaviour
         // 마우스 왼쪽 버튼을 누르면 자식이 부모로부터 바깥 방향(자식-부모 벡터)으로 날아감
         if (Input.GetMouseButtonDown(0))
         {
-            Rigidbody rb = childTransform.GetComponent<Rigidbody>();
-            Vector3 dir = (childTransform.position - transform.position).normalized;
+            // 자식 오브젝트를 복제
+            Transform clone = Instantiate(childTransform, childTransform.position, childTransform.rotation);
+            Rigidbody rb = clone.GetComponent<Rigidbody>();
+            if (rb == null)
+            {
+                rb = clone.gameObject.AddComponent<Rigidbody>();
+            }
+            Vector3 dir = (clone.position - transform.position).normalized;
             rb.linearVelocity = dir * 10f;
         }
     }
